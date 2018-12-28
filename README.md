@@ -12,7 +12,7 @@ Pomodoro Technique® and Pomodoro® are registered trademarks of Francesco Ciril
 ## Dependencies
 
 Created with:
-'''
+```
 Python 3.6.2
 simpleaudio 1.0.2
-'''
+```
