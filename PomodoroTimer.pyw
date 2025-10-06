@@ -10,8 +10,9 @@
 
 from tkinter import *
 from tkinter import messagebox
+from playsound3 import playsound
 
-import time, simpleaudio
+import time
 
 UPDATES_PER_SECOND = 1000 //  5   # 5 times per second in miliseconds
 
@@ -22,8 +23,7 @@ class Application(Frame):
         self.grid()
         self.create_widgets()
         self.active_timer = None
-        audio_file = "tannoy-chime-04.wav"
-        self.alarm_sound = simpleaudio.WaveObject.from_wave_file(audio_file)
+        self.audio_file = "tannoy-chime-04.wav"
         self.playing = None
         self.alerted = False
 
@@ -86,7 +86,6 @@ class Application(Frame):
                 self.update_self()
             if self.active_timer.time_expired:
                 self.active_timer.timer_start()
-                self.playing.stop()
                 
         else:
             self.active_timer = Timer(
@@ -96,6 +95,7 @@ class Application(Frame):
                 float(self.part_length_option.get()) 
                 )
             self.update_self()
+        self.stop_sound()
     
     def pause_timer(self):
         if self.active_timer:
@@ -103,8 +103,7 @@ class Application(Frame):
             self.update_self()
 
     def reset_timer(self):
-        if self.playing and self.playing.is_playing():
-            self.playing.stop()
+        self.stop_sound()
         self.active_timer = None
         self.time_text.delete(0.0, END)
         self.sets_text.delete(0.0, END)
@@ -114,10 +113,11 @@ class Application(Frame):
         if self.active_timer and not self.active_timer.time_expired:
             confirm = messagebox.askyesno(title='Confirm Exit', message='You have a timer running.\nAre you sure you want to quit?')
             if confirm:
+                self.stop_sound()
                 raise SystemExit
         else:
+            self.stop_sound()
             raise SystemExit
-          
 
     def update_self(self):
         global UPDATES_PER_SECOND
@@ -126,11 +126,7 @@ class Application(Frame):
             if self.active_timer.time_expired:
                 self.time_text.delete(0.0, END)
                 self.time_text.insert(0.0, self.active_timer.expire_message)
-                if self.playing:
-                    if not self.playing.is_playing():
-                        self.playing = self.alarm_sound.play()
-                else:
-                    self.playing = self.alarm_sound.play()
+                self.play_sound()
             else:
                 self.time_text.delete(0.0, END)
                 self.time_text.insert(0.0, str(self.active_timer))
@@ -139,6 +135,18 @@ class Application(Frame):
             self.parts_text.delete(0.0, END)
             self.parts_text.insert(0.0, str(self.active_timer.part))
             self.after(UPDATES_PER_SECOND, self.update_self)
+
+    def play_sound(self):
+        if self.playing:
+            if self.playing.is_alive():
+                return
+        self.playing = playsound(self.audio_file, block=False)
+
+    def stop_sound(self):
+        if self.playing:
+            if self.playing.is_alive():
+                self.playing.stop()
+            self.playing = None
             
 
 class Timer(object):
