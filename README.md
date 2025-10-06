@@ -13,6 +13,6 @@ Pomodoro Technique® and Pomodoro® are registered trademarks of Francesco Ciril
 
 Created with:
 ```
-Python 3.6.2
-simpleaudio 1.0.2
+Python 3.13.3
+playsound3 3.2.8
 ```
