@@ -6,7 +6,7 @@ Pomodoro Technique® and Pomodoro® are registered trademarks of Francesco Ciril
 
 ## Files
 
-- PomodoroTimer.py: source code for the timer program.
+- PomodoroTimer.pyw: source code for the timer program.
 - [tannoy-chime-04.wav](https://freesound.org/people/kwahmah_02/sounds/245955/): sound effect created by kwahmah_02. Distributed under the Creative Commons license.
 
 ## Dependencies
